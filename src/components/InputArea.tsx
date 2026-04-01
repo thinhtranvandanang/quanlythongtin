@@ -106,10 +106,18 @@ export default function InputArea({ userId }: InputAreaProps) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-2"
+            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-lg"
           >
-            <AlertCircle className="w-4 h-4" />
-            {error}
+            <div className="bg-red-500/20 p-1.5 rounded-lg">
+              <AlertCircle className="w-4 h-4" />
+            </div>
+            <span className="flex-1">{error}</span>
+            <button 
+              onClick={() => setError(null)}
+              className="text-xs font-bold hover:text-white transition-colors"
+            >
+              Đóng
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -18,8 +18,9 @@ const getAIInstance = () => {
 
 export const geminiFlash = "gemini-3-flash-preview";
 
-export const analyzeContent = async (content: string): Promise<AIAnalysis> => {
+export const analyzeContent = async (content: string, retryCount = 0): Promise<AIAnalysis> => {
   const ai = getAIInstance();
+  const MAX_RETRIES = 2;
 
   try {
     const response = await ai.models.generateContent({
@@ -50,6 +51,17 @@ export const analyzeContent = async (content: string): Promise<AIAnalysis> => {
     return JSON.parse(text) as AIAnalysis;
   } catch (error: any) {
     console.error("Gemini Analysis Error:", error);
+    
+    // Handle 503 Overloaded error with retry
+    if (error.message?.includes("503") || error.message?.includes("high demand")) {
+      if (retryCount < MAX_RETRIES) {
+        const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff: 1s, 2s
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return analyzeContent(content, retryCount + 1);
+      }
+      throw new Error("Hệ thống AI hiện đang quá tải. Vui lòng thử lại sau 1-2 phút.");
+    }
+
     throw new Error(error.message || "Không thể phân tích nội dung bằng AI.");
   }
 };
