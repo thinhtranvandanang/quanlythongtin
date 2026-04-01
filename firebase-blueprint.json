@@ -1,0 +1,43 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "lastActive": { "type": "string", "format": "date-time" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" }
+      },
+      "required": ["email"]
+    },
+    "Entry": {
+      "title": "Entry",
+      "description": "A piece of information captured by the user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "content": { "type": "string" },
+        "summary": { "type": "string" },
+        "type": { "type": "string", "enum": ["task", "event", "knowledge"] },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "complexity": { "type": "integer" },
+        "status": { "type": "string", "enum": ["pending", "done"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "nextReminder": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "content", "summary", "type", "priority", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles."
+    },
+    "/entries/{entryId}": {
+      "schema": "Entry",
+      "description": "User entries (tasks, events, knowledge)."
+    }
+  }
+}
