@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
-import { User } from 'firebase/auth';
-import { auth, db, handleFirestoreError, OperationType } from '../lib/firebase';
-import { collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { LogOut, Brain, Sparkles, Plus, List, CheckCircle2, Clock, AlertCircle, Search, Filter, Trash2, Check, ExternalLink } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { LogOut, Brain, Sparkles, List, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { analyzeContent, getProactiveSuggestions } from '../lib/gemini';
-import { Entry, Priority, EntryType } from '../types';
+import { Entry, EntryType } from '../types';
 import EntryCard from './EntryCard';
 import InputArea from './InputArea';
 import ProactiveNudges from './ProactiveNudges';
 
 interface DashboardProps {
-  user: User;
+  user: any;
 }
 
 export default function Dashboard({ user }: DashboardProps) {
@@ -21,25 +18,40 @@ export default function Dashboard({ user }: DashboardProps) {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const q = query(
-      collection(db, 'entries'),
-      where('userId', '==', user.uid),
-      orderBy('createdAt', 'desc')
-    );
+    const fetchEntries = async () => {
+      const { data, error } = await supabase
+        .from('entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newEntries = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Entry[];
-      setEntries(newEntries);
+      if (error) {
+        console.error('Error fetching entries:', error.message);
+      } else {
+        setEntries(data || []);
+      }
       setLoading(false);
-    }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, 'entries');
-    });
+    };
 
-    return () => unsubscribe();
-  }, [user.uid]);
+    fetchEntries();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('entries_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'entries',
+        filter: `user_id=eq.${user.id}`
+      }, () => {
+        fetchEntries();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user.id]);
 
   const filteredEntries = entries.filter(entry => {
     const matchesFilter = filter === 'all' || entry.type === filter;
@@ -48,7 +60,7 @@ export default function Dashboard({ user }: DashboardProps) {
     return matchesFilter && matchesSearch;
   });
 
-  const handleSignOut = () => auth.signOut();
+  const handleSignOut = () => supabase.auth.signOut();
 
   return (
     <div className="min-h-screen bg-navy-900 text-white pb-20">
@@ -63,8 +75,15 @@ export default function Dashboard({ user }: DashboardProps) {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 bg-navy-800/50 p-1.5 pr-4 rounded-full border border-white/5">
-            <img src={user.photoURL || ''} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
-            <span className="text-sm font-medium hidden md:block">{user.displayName}</span>
+            <img 
+              src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${user.email}`} 
+              alt="" 
+              className="w-8 h-8 rounded-full" 
+              referrerPolicy="no-referrer" 
+            />
+            <span className="text-sm font-medium hidden md:block">
+              {user.user_metadata?.full_name || user.email}
+            </span>
           </div>
           <button
             onClick={handleSignOut}
@@ -81,7 +100,7 @@ export default function Dashboard({ user }: DashboardProps) {
         <ProactiveNudges entries={entries} />
 
         {/* Input Section */}
-        <InputArea userId={user.uid} />
+        <InputArea userId={user.id} />
 
         {/* List Section */}
         <div className="space-y-6">

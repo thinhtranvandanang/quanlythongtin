@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { Sparkles, Send, Link as LinkIcon, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { Sparkles, Send, Loader2 } from 'lucide-react';
 import { analyzeContent } from '../lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,21 +23,27 @@ export default function InputArea({ userId }: InputAreaProps) {
     try {
       const analysis = await analyzeContent(content);
       
-      await addDoc(collection(db, 'entries'), {
-        userId,
+      const { error: supabaseError } = await supabase.from('entries').insert({
+        user_id: userId,
         content,
         summary: analysis.summary,
         type: analysis.type,
         priority: analysis.priority,
         complexity: analysis.complexity,
-        status: 'pending',
-        createdAt: serverTimestamp()
+        suggested_action: analysis.suggestedAction,
+        status: 'pending'
       });
 
+      if (supabaseError) {
+        console.error('Supabase Insert Error:', supabaseError);
+        throw new Error(`Lỗi lưu dữ liệu: ${supabaseError.message}`);
+      }
+
       setContent('');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error processing entry:', err);
-      setError('AI analysis failed. Please try again.');
+      // Display the actual error message if available, otherwise fallback
+      setError(err.message || 'Có lỗi xảy ra khi xử lý thông tin. Vui lòng thử lại.');
     } finally {
       setIsAnalyzing(false);
     }

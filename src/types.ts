@@ -4,21 +4,13 @@ export type Status = 'pending' | 'done';
 
 export interface Entry {
   id: string;
-  userId: string;
+  user_id: string;
   content: string;
   summary: string;
   type: EntryType;
   priority: Priority;
   complexity: number;
   status: Status;
-  createdAt: any; // Firestore Timestamp
-  nextReminder?: any; // Firestore Timestamp
-}
-
-export interface UserProfile {
-  uid: string;
-  email: string;
-  displayName?: string;
-  photoURL?: string;
-  lastActive?: any; // Firestore Timestamp
+  created_at: string;
+  next_reminder?: string;
 }

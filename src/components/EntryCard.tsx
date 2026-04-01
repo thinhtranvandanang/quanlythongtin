@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { CheckCircle2, Clock, AlertCircle, Trash2, Check, ExternalLink, MoreVertical, Edit3, ChevronDown, ChevronUp } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { CheckCircle2, Clock, Trash2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Entry, Priority, EntryType } from '../types';
-import ReactMarkdown from 'react-markdown';
+import { Entry } from '../types';
 import { format } from 'date-fns';
 
 interface EntryCardProps {
@@ -18,9 +16,14 @@ export default function EntryCard({ entry }: EntryCardProps) {
   const toggleStatus = async () => {
     const newStatus = entry.status === 'pending' ? 'done' : 'pending';
     try {
-      await updateDoc(doc(db, 'entries', entry.id), { status: newStatus });
-    } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `entries/${entry.id}`);
+      const { error } = await supabase
+        .from('entries')
+        .update({ status: newStatus })
+        .eq('id', entry.id);
+      
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Error updating entry:', error.message);
     }
   };
 
@@ -28,9 +31,14 @@ export default function EntryCard({ entry }: EntryCardProps) {
     if (!confirm('Bạn có chắc chắn muốn xóa mục này không?')) return;
     setIsDeleting(true);
     try {
-      await deleteDoc(doc(db, 'entries', entry.id));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `entries/${entry.id}`);
+      const { error } = await supabase
+        .from('entries')
+        .delete()
+        .eq('id', entry.id);
+      
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Error deleting entry:', error.message);
       setIsDeleting(false);
     }
   };
@@ -96,7 +104,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
               </span>
             )}
             <span className="text-[10px] font-medium text-gray-500 ml-auto">
-              {entry.createdAt?.toDate ? format(entry.createdAt.toDate(), 'MMM d, h:mm a') : 'Vừa xong'}
+              {entry.created_at ? format(new Date(entry.created_at), 'MMM d, h:mm a') : 'Vừa xong'}
             </span>
           </div>
 
