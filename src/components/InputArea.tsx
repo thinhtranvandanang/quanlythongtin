@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Sparkles, Send, Loader2 } from 'lucide-react';
+import { Sparkles, Send, Loader2, Check } from 'lucide-react';
 import { analyzeContent } from '../lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,18 +12,22 @@ export default function InputArea({ userId }: InputAreaProps) {
   const [content, setContent] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || isAnalyzing) return;
 
+    console.log('Starting analysis for content:', content.substring(0, 50) + '...');
     setIsAnalyzing(true);
     setError(null);
+    setSuccess(false);
 
     try {
       const analysis = await analyzeContent(content);
+      console.log('AI Analysis result:', analysis);
       
-      const { error: supabaseError } = await supabase.from('entries').insert({
+      const entryData = {
         user_id: userId,
         content,
         summary: analysis.summary,
@@ -32,17 +36,25 @@ export default function InputArea({ userId }: InputAreaProps) {
         complexity: analysis.complexity,
         suggested_action: analysis.suggestedAction,
         status: 'pending'
-      });
+      };
+
+      console.log('Inserting into Supabase:', entryData);
+      const { data, error: supabaseError } = await supabase
+        .from('entries')
+        .insert(entryData)
+        .select();
 
       if (supabaseError) {
         console.error('Supabase Insert Error:', supabaseError);
-        throw new Error(`Lỗi lưu dữ liệu: ${supabaseError.message}`);
+        throw new Error(`Lỗi lưu dữ liệu: ${supabaseError.message} (${supabaseError.code})`);
       }
 
+      console.log('Insert successful, data:', data);
       setContent('');
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
       console.error('Error processing entry:', err);
-      // Display the actual error message if available, otherwise fallback
       setError(err.message || 'Có lỗi xảy ra khi xử lý thông tin. Vui lòng thử lại.');
     } finally {
       setIsAnalyzing(false);
@@ -101,6 +113,19 @@ export default function InputArea({ userId }: InputAreaProps) {
       </form>
 
       <AnimatePresence>
+        {success && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-lg"
+          >
+            <div className="bg-green-500/20 p-1.5 rounded-lg">
+              <Check className="w-4 h-4" />
+            </div>
+            <span className="flex-1">Lưu thông tin thành công!</span>
+          </motion.div>
+        )}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}

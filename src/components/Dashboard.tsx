@@ -35,6 +35,9 @@ export default function Dashboard({ user }: DashboardProps) {
 
     fetchEntries();
 
+    // Fallback polling every 30 seconds
+    const pollInterval = setInterval(fetchEntries, 30000);
+
     // Subscribe to realtime changes
     const channel = supabase
       .channel('entries_changes')
@@ -44,11 +47,15 @@ export default function Dashboard({ user }: DashboardProps) {
         table: 'entries',
         filter: `user_id=eq.${user.id}`
       }, () => {
+        console.log('Realtime change detected, fetching entries...');
         fetchEntries();
       })
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Supabase Realtime status:', status);
+      });
 
     return () => {
+      clearInterval(pollInterval);
       supabase.removeChannel(channel);
     };
   }, [user.id]);

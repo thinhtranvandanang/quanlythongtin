@@ -15,6 +15,7 @@ export const supabase = createClient(
 export interface Entry {
   id: string;
   user_id: string;
+  content: string;
   summary: string;
   type: 'task' | 'event' | 'knowledge';
   priority: 'low' | 'medium' | 'high';
@@ -22,4 +23,5 @@ export interface Entry {
   suggested_action?: string;
   status: 'pending' | 'done';
   created_at: string;
+  next_reminder?: string;
 }
