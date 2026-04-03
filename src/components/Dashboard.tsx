@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import { LogOut, Brain, Sparkles, List, Search } from 'lucide-react';
+import { LogOut, Brain, Sparkles, List, Search, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Entry, EntryType } from '../types';
 import EntryCard from './EntryCard';
@@ -14,41 +14,46 @@ interface DashboardProps {
 export default function Dashboard({ user }: DashboardProps) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [filter, setFilter] = useState<EntryType | 'all'>('all');
   const [search, setSearch] = useState('');
 
+  const fetchEntries = useCallback(async (showLoading = false) => {
+    if (showLoading) setLoading(true);
+    setIsRefreshing(true);
+    const { data, error } = await supabase
+      .from('entries')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching entries:', error.message);
+    } else {
+      console.log('Entries fetched successfully:', data?.length || 0, 'items');
+      setEntries(data || []);
+    }
+    setLoading(false);
+    setIsRefreshing(false);
+  }, [user.id]);
+
   useEffect(() => {
-    const fetchEntries = async () => {
-      const { data, error } = await supabase
-        .from('entries')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching entries:', error.message);
-      } else {
-        setEntries(data || []);
-      }
-      setLoading(false);
-    };
-
-    fetchEntries();
+    fetchEntries(true);
 
     // Fallback polling every 30 seconds
-    const pollInterval = setInterval(fetchEntries, 30000);
+    const pollInterval = setInterval(() => fetchEntries(false), 30000);
 
     // Subscribe to realtime changes
     const channel = supabase
-      .channel('entries_changes')
+      .channel('entries_realtime')
       .on('postgres_changes', { 
         event: '*', 
         schema: 'public', 
         table: 'entries',
         filter: `user_id=eq.${user.id}`
-      }, () => {
-        console.log('Realtime change detected, fetching entries...');
-        fetchEntries();
+      }, (payload: any) => {
+        console.log('Realtime change detected:', payload.eventType, payload.new?.id || payload.old?.id);
+        fetchEntries(false);
       })
       .subscribe((status) => {
         console.log('Supabase Realtime status:', status);
@@ -58,7 +63,7 @@ export default function Dashboard({ user }: DashboardProps) {
       clearInterval(pollInterval);
       supabase.removeChannel(channel);
     };
-  }, [user.id]);
+  }, [fetchEntries, user.id]);
 
   const filteredEntries = entries.filter(entry => {
     const matchesFilter = filter === 'all' || entry.type === filter;
@@ -81,6 +86,15 @@ export default function Dashboard({ user }: DashboardProps) {
         </div>
 
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => fetchEntries(true)}
+            disabled={isRefreshing}
+            className={`p-2.5 hover:bg-white/10 rounded-xl transition-all text-gray-400 hover:text-white ${isRefreshing ? 'animate-spin text-accent' : ''}`}
+            title="Làm mới dữ liệu"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </button>
+
           <div className="flex items-center gap-3 bg-navy-800/50 p-1.5 pr-4 rounded-full border border-white/5">
             <img 
               src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${user.email}`} 
