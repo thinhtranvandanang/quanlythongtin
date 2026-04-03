@@ -13,6 +13,57 @@ export default function InputArea({ userId }: InputAreaProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const saveEntry = async (analysis: any, originalContent: string) => {
+    const entryData = {
+      user_id: userId,
+      content: originalContent,
+      summary: analysis.summary,
+      type: analysis.type,
+      priority: analysis.priority,
+      complexity: analysis.complexity,
+      suggested_action: analysis.suggestedAction,
+      status: 'pending'
+    };
+
+    console.log('Inserting into Supabase:', entryData);
+    const { data, error: supabaseError } = await supabase
+      .from('entries')
+      .insert(entryData)
+      .select();
+
+    if (supabaseError) {
+      console.error('Supabase Insert Error:', supabaseError);
+      throw new Error(`Lỗi lưu dữ liệu: ${supabaseError.message} (${supabaseError.code})`);
+    }
+
+    console.log('Insert successful, data:', data);
+    setContent('');
+    setSuccess(true);
+    setError(null);
+    setShowFallback(false);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const handleManualSave = async () => {
+    setIsAnalyzing(true);
+    try {
+      // Default analysis for manual save
+      const fallbackAnalysis = {
+        summary: content.split('\n')[0].substring(0, 100) || 'Nội dung mới',
+        type: 'task',
+        priority: 'medium',
+        complexity: 1,
+        suggestedAction: 'Vui lòng kiểm tra và phân loại lại mục này.'
+      };
+      await saveEntry(fallbackAnalysis, content);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,40 +73,16 @@ export default function InputArea({ userId }: InputAreaProps) {
     setIsAnalyzing(true);
     setError(null);
     setSuccess(false);
+    setShowFallback(false);
 
     try {
       const analysis = await analyzeContent(content);
       console.log('AI Analysis result:', analysis);
-      
-      const entryData = {
-        user_id: userId,
-        content,
-        summary: analysis.summary,
-        type: analysis.type,
-        priority: analysis.priority,
-        complexity: analysis.complexity,
-        suggested_action: analysis.suggestedAction,
-        status: 'pending'
-      };
-
-      console.log('Inserting into Supabase:', entryData);
-      const { data, error: supabaseError } = await supabase
-        .from('entries')
-        .insert(entryData)
-        .select();
-
-      if (supabaseError) {
-        console.error('Supabase Insert Error:', supabaseError);
-        throw new Error(`Lỗi lưu dữ liệu: ${supabaseError.message} (${supabaseError.code})`);
-      }
-
-      console.log('Insert successful, data:', data);
-      setContent('');
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      await saveEntry(analysis, content);
     } catch (err: any) {
       console.error('Error processing entry:', err);
-      setError(err.message || 'Có lỗi xảy ra khi xử lý thông tin. Vui lòng thử lại.');
+      setError(err.message || 'Có lỗi xảy ra khi xử lý thông tin.');
+      setShowFallback(true);
     } finally {
       setIsAnalyzing(false);
     }
@@ -137,6 +164,14 @@ export default function InputArea({ userId }: InputAreaProps) {
               <AlertCircle className="w-4 h-4" />
             </div>
             <span className="flex-1">{error}</span>
+            {showFallback && (
+              <button
+                onClick={handleManualSave}
+                className="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all border border-white/10"
+              >
+                Lưu mà không cần AI
+              </button>
+            )}
             <button 
               onClick={() => setError(null)}
               className="text-xs font-bold hover:text-white transition-colors"
