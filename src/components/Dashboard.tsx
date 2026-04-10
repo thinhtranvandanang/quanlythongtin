@@ -77,7 +77,7 @@ export default function Dashboard({ user }: DashboardProps) {
   const handleSignOut = () => supabase.auth.signOut();
 
   return (
-    <div className="min-h-screen bg-navy-900 text-white pb-20">
+    <div className="min-h-screen bg-navy-900 text-gray-900 pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 glass px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-8">
@@ -88,17 +88,17 @@ export default function Dashboard({ user }: DashboardProps) {
             <h1 className="text-xl font-bold tracking-tight hidden sm:block">Trợ lý AI</h1>
           </div>
 
-          <nav className="hidden md:flex items-center gap-1 bg-navy-800/50 p-1 rounded-xl border border-white/5">
+          <nav className="hidden md:flex items-center gap-1 bg-white p-1 rounded-xl border border-gray-200 shadow-sm">
             <button
               onClick={() => setActiveView('dashboard')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeView === 'dashboard' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeView === 'dashboard' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-500 hover:text-gray-900'}`}
             >
               <List className="w-4 h-4" />
               Dashboard
             </button>
             <button
               onClick={() => setActiveView('tips')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeView === 'tips' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-400 hover:text-white'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeView === 'tips' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-500 hover:text-gray-900'}`}
             >
               <GraduationCap className="w-4 h-4" />
               Mẹo học tập
@@ -111,27 +111,27 @@ export default function Dashboard({ user }: DashboardProps) {
             <button
               onClick={() => fetchEntries(true)}
               disabled={isRefreshing}
-              className={`p-2.5 hover:bg-white/10 rounded-xl transition-all text-gray-400 hover:text-white ${isRefreshing ? 'animate-spin text-accent' : ''}`}
+              className={`p-2.5 hover:bg-gray-100 rounded-xl transition-all text-gray-500 hover:text-gray-900 ${isRefreshing ? 'animate-spin text-accent' : ''}`}
               title="Làm mới dữ liệu"
             >
               <RefreshCw className="w-5 h-5" />
             </button>
           )}
 
-          <div className="flex items-center gap-3 bg-navy-800/50 p-1.5 pr-4 rounded-full border border-white/5">
+          <div className="flex items-center gap-3 bg-white p-1.5 pr-4 rounded-full border border-gray-200 shadow-sm">
             <img 
               src={user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${user.email}`} 
               alt="" 
               className="w-8 h-8 rounded-full" 
               referrerPolicy="no-referrer" 
             />
-            <span className="text-sm font-medium hidden md:block">
+            <span className="text-sm font-medium hidden md:block text-gray-700">
               {user.user_metadata?.full_name || user.email}
             </span>
           </div>
           <button
             onClick={handleSignOut}
-            className="p-2.5 hover:bg-white/10 rounded-xl transition-colors text-gray-400 hover:text-white"
+            className="p-2.5 hover:bg-gray-100 rounded-xl transition-colors text-gray-500 hover:text-gray-900"
             title="Đăng xuất"
           >
             <LogOut className="w-5 h-5" />
@@ -141,17 +141,17 @@ export default function Dashboard({ user }: DashboardProps) {
 
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         {/* Mobile Navigation */}
-        <div className="md:hidden flex items-center gap-2 bg-navy-800/50 p-1 rounded-2xl border border-white/5">
+        <div className="md:hidden flex items-center gap-2 bg-white p-1 rounded-2xl border border-gray-200 shadow-sm">
           <button
             onClick={() => setActiveView('dashboard')}
-            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeView === 'dashboard' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-400'}`}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeView === 'dashboard' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-500'}`}
           >
             <List className="w-4 h-4" />
             Dashboard
           </button>
           <button
             onClick={() => setActiveView('tips')}
-            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeView === 'tips' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-400'}`}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeView === 'tips' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-500'}`}
           >
             <GraduationCap className="w-4 h-4" />
             Mẹo học tập
@@ -188,8 +188,8 @@ export default function Dashboard({ user }: DashboardProps) {
                         onClick={() => setFilter(t)}
                         className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                           filter === t 
-                            ? 'bg-accent text-white' 
-                            : 'bg-navy-800 text-gray-400 hover:text-white border border-white/5'
+                            ? 'bg-accent text-white shadow-md shadow-accent/20' 
+                            : 'bg-white text-gray-500 hover:text-gray-900 border border-gray-200'
                         }`}
                       >
                         {t === 'all' ? 'Tất cả' : t === 'task' ? 'Công việc' : t === 'event' ? 'Sự kiện' : 'Kiến thức'}
@@ -199,13 +199,13 @@ export default function Dashboard({ user }: DashboardProps) {
                 </div>
 
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Tìm kiếm nội dung..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full bg-navy-800 border border-white/5 rounded-2xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
+                    className="w-full bg-white border border-gray-200 rounded-2xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all shadow-sm"
                   />
                 </div>
 
@@ -220,12 +220,12 @@ export default function Dashboard({ user }: DashboardProps) {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-center py-20 glass rounded-3xl"
+                      className="text-center py-20 bg-white border border-gray-200 rounded-3xl shadow-sm"
                     >
-                      <div className="bg-navy-800 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Sparkles className="w-8 h-8 text-gray-600" />
+                      <div className="bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <Sparkles className="w-8 h-8 text-gray-300" />
                       </div>
-                      <p className="text-gray-500">Không tìm thấy nội dung. Hãy thử lưu gì đó!</p>
+                      <p className="text-gray-400">Không tìm thấy nội dung. Hãy thử lưu gì đó!</p>
                     </motion.div>
                   )}
                 </AnimatePresence>

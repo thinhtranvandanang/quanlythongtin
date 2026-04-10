@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy-900: #0a0a1a;
-  --color-navy-800: #1a1a2e;
-  --color-navy-700: #2a2a4e;
-  --color-navy-600: #3a3a6e;
+  --color-navy-950: #f1f3f5;
+  --color-navy-900: #f8f9fa;
+  --color-navy-800: #ffffff;
+  --color-navy-700: #e9ecef;
+  --color-navy-600: #dee2e6;
   --color-accent: #4f46e5;
   --color-accent-hover: #4338ca;
 }
 
 :root {
   background-color: var(--color-navy-900);
-  color: #f8fafc;
+  color: #111827;
 }
 
 body {
@@ -22,9 +23,10 @@ body {
 }
 
 .glass {
-  background: rgba(26, 26, 46, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .markdown-body {

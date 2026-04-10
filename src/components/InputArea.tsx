@@ -123,7 +123,7 @@ export default function InputArea({ userId }: InputAreaProps) {
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="space-y-4 pt-4 border-t border-white/10"
+              className="space-y-4 pt-4 border-t border-gray-100"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -131,7 +131,7 @@ export default function InputArea({ userId }: InputAreaProps) {
                   <select
                     value={manualType}
                     onChange={(e) => setManualType(e.target.value as EntryType)}
-                    className="w-full bg-navy-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-accent"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-accent"
                   >
                     <option value="task">Công việc</option>
                     <option value="event">Sự kiện</option>
@@ -143,7 +143,7 @@ export default function InputArea({ userId }: InputAreaProps) {
                   <select
                     value={manualPriority}
                     onChange={(e) => setManualPriority(e.target.value as Priority)}
-                    className="w-full bg-navy-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-accent"
+                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-accent"
                   >
                     <option value="low">Thấp</option>
                     <option value="medium">Trung bình</option>
@@ -158,7 +158,7 @@ export default function InputArea({ userId }: InputAreaProps) {
                   value={manualSummary}
                   onChange={(e) => setManualSummary(e.target.value)}
                   placeholder="Tóm tắt ngắn gọn nội dung..."
-                  className="w-full bg-navy-800 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-accent"
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-accent"
                 />
               </div>
             </motion.div>
@@ -168,9 +168,9 @@ export default function InputArea({ userId }: InputAreaProps) {
             <button
               type="button"
               onClick={() => setIsManualMode(!isManualMode)}
-              className={`text-xs font-bold flex items-center gap-2 transition-colors ${isManualMode ? 'text-accent' : 'text-gray-500 hover:text-white'}`}
+              className={`text-xs font-bold flex items-center gap-2 transition-colors ${isManualMode ? 'text-accent' : 'text-gray-500 hover:text-gray-900'}`}
             >
-              <div className={`w-8 h-4 rounded-full relative transition-colors ${isManualMode ? 'bg-accent' : 'bg-gray-700'}`}>
+              <div className={`w-8 h-4 rounded-full relative transition-colors ${isManualMode ? 'bg-accent' : 'bg-gray-200'}`}>
                 <div className={`absolute top-1 w-2 h-2 rounded-full bg-white transition-all ${isManualMode ? 'left-5' : 'left-1'}`} />
               </div>
               Chế độ thủ công
@@ -189,7 +189,7 @@ export default function InputArea({ userId }: InputAreaProps) {
                 disabled={!content.trim() || (isManualMode && !manualSummary.trim()) || isAnalyzing}
                 className={`flex-1 sm:flex-none px-8 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all ${
                   !content.trim() || (isManualMode && !manualSummary.trim()) || isAnalyzing
-                    ? 'bg-navy-800 text-gray-600 cursor-not-allowed'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-accent hover:bg-accent-hover text-white shadow-lg shadow-accent/20'
                 }`}
               >
@@ -245,7 +245,7 @@ export default function InputArea({ userId }: InputAreaProps) {
             )}
             <button 
               onClick={() => setError(null)}
-              className="text-xs font-bold hover:text-white transition-colors"
+              className="text-xs font-bold hover:text-gray-900 transition-colors"
             >
               Đóng
             </button>

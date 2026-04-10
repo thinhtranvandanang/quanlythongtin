@@ -71,9 +71,9 @@ export default function EntryCard({ entry }: EntryCardProps) {
   };
 
   const priorityColors = {
-    low: 'bg-green-500/10 text-green-400 border-green-500/20',
-    medium: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-    high: 'bg-red-500/10 text-red-400 border-red-500/20'
+    low: 'bg-green-50 text-green-600 border-green-200',
+    medium: 'bg-yellow-50 text-yellow-600 border-yellow-200',
+    high: 'bg-red-50 text-red-600 border-red-200'
   };
 
   const priorityLabels = {
@@ -111,7 +111,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
             className={`mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
               entry.status === 'done' 
                 ? 'bg-accent border-accent text-white' 
-                : 'border-white/20 hover:border-accent text-transparent'
+                : 'border-gray-200 hover:border-accent text-transparent'
             }`}
           >
             <Check className="w-4 h-4" />
@@ -125,7 +125,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 <select
                   value={editedType}
                   onChange={(e) => setEditedType(e.target.value as EntryType)}
-                  className="bg-navy-800 border border-white/10 rounded-lg px-2 py-1 text-xs text-white focus:ring-1 focus:ring-accent"
+                  className="bg-white border border-gray-200 rounded-lg px-2 py-1 text-xs text-gray-900 focus:ring-1 focus:ring-accent"
                 >
                   <option value="task">Công việc</option>
                   <option value="event">Sự kiện</option>
@@ -134,7 +134,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 <select
                   value={editedPriority}
                   onChange={(e) => setEditedPriority(e.target.value as Priority)}
-                  className="bg-navy-800 border border-white/10 rounded-lg px-2 py-1 text-xs text-white focus:ring-1 focus:ring-accent"
+                  className="bg-white border border-gray-200 rounded-lg px-2 py-1 text-xs text-gray-900 focus:ring-1 focus:ring-accent"
                 >
                   <option value="low">Ưu tiên: Thấp</option>
                   <option value="medium">Ưu tiên: Trung bình</option>
@@ -144,7 +144,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
               <textarea
                 value={editedSummary}
                 onChange={(e) => setEditedSummary(e.target.value)}
-                className="w-full bg-navy-800 border border-white/10 rounded-xl p-3 text-white text-sm focus:ring-1 focus:ring-accent min-h-[80px]"
+                className="w-full bg-white border border-gray-200 rounded-xl p-3 text-gray-900 text-sm focus:ring-1 focus:ring-accent min-h-[80px]"
                 placeholder="Nhập tiêu đề tóm tắt..."
               />
               <div className="flex gap-2">
@@ -163,7 +163,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                     setEditedType(entry.type);
                     setEditedPriority(entry.priority);
                   }}
-                  className="flex-1 bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 border border-white/10"
+                  className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 border border-gray-200"
                 >
                   <X className="w-3 h-3" />
                   Hủy
@@ -176,7 +176,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${priorityColors[entry.priority]}`}>
                   {priorityLabels[entry.priority]}
                 </span>
-                <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/5 text-gray-400 border border-white/10">
+                <span className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gray-50 text-gray-500 border border-gray-200">
                   {typeIcons[entry.type]}
                   {typeLabels[entry.type]}
                 </span>
@@ -190,7 +190,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 </span>
               </div>
 
-              <h3 className={`text-lg font-medium leading-tight mb-2 ${entry.status === 'done' ? 'line-through text-gray-500' : 'text-white'}`}>
+              <h3 className={`text-lg font-medium leading-tight mb-2 ${entry.status === 'done' ? 'line-through text-gray-400' : 'text-gray-900'}`}>
                 {entry.summary}
               </h3>
 
@@ -232,7 +232,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 exit={{ height: 0, opacity: 0 }}
                 className="overflow-hidden"
               >
-                <div className="mt-4 pt-4 border-t border-white/5 text-gray-400 text-sm whitespace-pre-wrap leading-relaxed">
+                <div className="mt-4 pt-4 border-t border-gray-100 text-gray-600 text-sm whitespace-pre-wrap leading-relaxed">
                   {entry.content}
                 </div>
               </motion.div>
