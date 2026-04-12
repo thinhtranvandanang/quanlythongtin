@@ -50,7 +50,7 @@ export default function SubjectTips() {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">{subject.name}</h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     {subject.id === 'english' ? 'Quy trình chuyển câu Việt → Anh' : 'Đang cập nhật nội dung...'}
                   </p>
                 </div>

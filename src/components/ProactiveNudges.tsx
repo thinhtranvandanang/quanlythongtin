@@ -47,7 +47,7 @@ export default function ProactiveNudges({ entries }: ProactiveNudgesProps) {
         <button
           onClick={fetchSuggestions}
           disabled={isLoading}
-          className="text-xs font-medium text-gray-500 hover:text-white flex items-center gap-1 transition-colors"
+          className="text-xs font-medium text-gray-600 hover:text-accent flex items-center gap-1 transition-colors"
         >
           <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
           Làm mới
@@ -70,7 +70,7 @@ export default function ProactiveNudges({ entries }: ProactiveNudgesProps) {
                   <div className="bg-accent/10 p-1.5 rounded-lg group-hover:bg-accent/20 transition-colors">
                     <BrainIcon className="w-4 h-4 text-accent" />
                   </div>
-                  <p className="text-xs font-medium text-gray-300 leading-relaxed flex-1">
+                  <p className="text-xs font-medium text-gray-700 leading-relaxed flex-1">
                     {suggestion}
                   </p>
                 </div>

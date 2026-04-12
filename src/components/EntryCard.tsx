@@ -181,16 +181,16 @@ export default function EntryCard({ entry }: EntryCardProps) {
                   {typeLabels[entry.type]}
                 </span>
                 {entry.complexity && (
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">
                     Độ phức tạp: {entry.complexity}/5
                   </span>
                 )}
-                <span className="text-[10px] font-medium text-gray-500 ml-auto">
+                <span className="text-[10px] font-medium text-gray-600 ml-auto">
                   {entry.created_at ? format(new Date(entry.created_at), 'MMM d, h:mm a') : 'Vừa xong'}
                 </span>
               </div>
 
-              <h3 className={`text-lg font-medium leading-tight mb-2 ${entry.status === 'done' ? 'line-through text-gray-400' : 'text-gray-900'}`}>
+              <h3 className={`text-lg font-medium leading-tight mb-2 ${entry.status === 'done' ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                 {entry.summary}
               </h3>
 
@@ -232,7 +232,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 exit={{ height: 0, opacity: 0 }}
                 className="overflow-hidden"
               >
-                <div className="mt-4 pt-4 border-t border-gray-100 text-gray-600 text-sm whitespace-pre-wrap leading-relaxed">
+                <div className="mt-4 pt-4 border-t border-gray-100 text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">
                   {entry.content}
                 </div>
               </motion.div>

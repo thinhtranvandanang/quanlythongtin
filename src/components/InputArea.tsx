@@ -212,12 +212,12 @@ export default function InputArea({ userId }: InputAreaProps) {
 
       <AnimatePresence>
         {success && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-green-500/10 border border-green-500/20 text-green-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-lg"
-          >
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-green-500/10 border border-green-500/20 text-green-600 px-4 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-lg"
+            >
             <div className="bg-green-500/20 p-1.5 rounded-lg">
               <Check className="w-4 h-4" />
             </div>
@@ -225,12 +225,12 @@ export default function InputArea({ userId }: InputAreaProps) {
           </motion.div>
         )}
         {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-lg"
-          >
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-red-500/10 border border-red-500/20 text-red-600 px-4 py-3 rounded-2xl text-sm flex items-center gap-3 shadow-lg"
+            >
             <div className="bg-red-500/20 p-1.5 rounded-lg">
               <AlertCircle className="w-4 h-4" />
             </div>

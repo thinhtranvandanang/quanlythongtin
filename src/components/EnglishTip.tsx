@@ -6,13 +6,13 @@ export default function EnglishTip() {
     <div className="space-y-16 pb-32">
       {/* HEADER */}
       <header className="border-b-2 border-gray-200 pb-8 mb-12">
-        <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">
+        <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-3">
           Phiên bản bổ sung v2 · Tiếng Anh Thực Hành · FPT University
         </div>
         <h1 className="text-5xl font-bold leading-tight mb-3 tracking-tight text-gray-900">
           Quy Trình Chuyển Câu <em className="text-accent not-italic">Việt → Anh</em>
         </h1>
-        <div className="font-mono text-sm text-gray-500 leading-relaxed">
+        <div className="font-mono text-sm text-gray-600 leading-relaxed">
           // 5 tầng quyết định · trợ động từ · 9 loại câu · thì & trạng thái hành động · động từ khiếm khuyết · lỗi phổ biến · mẹo nhớ
         </div>
       </header>
@@ -28,9 +28,9 @@ export default function EnglishTip() {
             { step: '05', label: 'Điền & kiểm tra', hint: 'Chia V, a/an/the, trật tự S→V→O' },
           ].map((item, idx) => (
             <div key={idx} className="bg-white p-6 text-center border-r border-gray-100 last:border-r-0 relative group hover:bg-gray-50 transition-colors">
-              <span className="block font-mono text-[10px] text-gray-400 mb-2 tracking-wider">TẦNG {item.step}</span>
+              <span className="block font-mono text-[10px] text-gray-500 mb-2 tracking-wider">TẦNG {item.step}</span>
               <span className="block text-base font-bold mb-2 text-gray-900">{item.label}</span>
-              <span className="block text-[11px] text-gray-500 leading-tight">{item.hint}</span>
+              <span className="block text-[11px] text-gray-600 leading-tight">{item.hint}</span>
               {idx < 4 && (
                 <div className="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 z-10 text-gray-200">
                   <ArrowRight className="w-4 h-4" />

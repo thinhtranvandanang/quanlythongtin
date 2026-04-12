@@ -223,9 +223,9 @@ export default function Dashboard({ user }: DashboardProps) {
                       className="text-center py-20 bg-white border border-gray-200 rounded-3xl shadow-sm"
                     >
                       <div className="bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Sparkles className="w-8 h-8 text-gray-300" />
+                        <Sparkles className="w-8 h-8 text-gray-400" />
                       </div>
-                      <p className="text-gray-400">Không tìm thấy nội dung. Hãy thử lưu gì đó!</p>
+                      <p className="text-gray-500">Không tìm thấy nội dung. Hãy thử lưu gì đó!</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
